@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import pkg from "jsonwebtoken";
 const { sign } = pkg;
 import User from "../models/user.model.js";
-const JWT_SECRET = process.env.JWT_SECRET;
 
 export const register = async (req, res, next) => {
 	const { username, email, password } = req.body;
@@ -27,16 +26,12 @@ export const login = async (req, res, next) => {
 
 	try {
 		const user = await User.findOne({ username });
-		if (!user)
-			return res
-				.status(400)
-				.json({ message: "Incorrect username or password" });
+		if (!user) return res.status(400).json({ message: "Incorrect username" });
 
 		const match = await bcrypt.compare(password, user.password);
-		if (!match)
-			return res
-				.status(400)
-				.json({ message: "Incorrect username or password" });
+		if (!match) {
+			return res.status(400).json({ message: "Incorrect password" });
+		}
 
 		const token = sign(
 			{
@@ -44,7 +39,7 @@ export const login = async (req, res, next) => {
 				username: user.username,
 				role: user.role,
 			},
-			JWT_SECRET,
+			process.env.JWT_SECRET,
 			{ expiresIn: "7d" },
 		);
 		res.status(200).json({ token });
