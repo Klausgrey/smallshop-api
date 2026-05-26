@@ -1,4 +1,5 @@
-import { JsonWebToken } from "jsonwebtoken";
+import pkg from "jsonwebtoken";
+const { verify } = pkg;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const verifyToken = async (req, res, next) => {
@@ -9,7 +10,7 @@ export const verifyToken = async (req, res, next) => {
 	if (!token) return res.status(401).json({ message: "Invalid token format" });
 
 	try {
-		const decoded = JsonWebToken.verify(token, JWT_SECRET);
+		const decoded = verify(token, JWT_SECRET);
 		req.user = decoded;
 		next();
 	} catch (err) {
@@ -17,12 +18,10 @@ export const verifyToken = async (req, res, next) => {
 	}
 };
 
-
 export const isOwner = (req, res, next) => {
-	const user = req.user.role
+	const user = req.user.role;
 
 	if (user === "owner") {
-		next()
-	} else
-		res.status(403).json({message: "Access denied"})
-}
+		next();
+	} else res.status(403).json({ message: "Access denied" });
+};

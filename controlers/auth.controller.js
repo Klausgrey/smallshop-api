@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
-import { JsonWebToken } from "jsonwebtoken";
+import pkg from "jsonwebtoken";
+const { sign } = pkg;
 import User from "../models/user.model.js";
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -37,11 +38,11 @@ export const login = async (req, res, next) => {
 				.status(400)
 				.json({ message: "Incorrect username or password" });
 
-		const token = JsonWebToken.sign(
+		const token = sign(
 			{
 				id: user.id,
 				username: user.username,
-				role: user.role
+				role: user.role,
 			},
 			JWT_SECRET,
 			{ expiresIn: "7d" },
