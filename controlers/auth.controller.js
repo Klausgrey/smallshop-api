@@ -29,9 +29,7 @@ export const login = async (req, res, next) => {
 		if (!user) return res.status(400).json({ message: "Incorrect username" });
 
 		const match = await bcrypt.compare(password, user.password);
-		if (!match) {
-			return res.status(400).json({ message: "Incorrect password" });
-		}
+		if (!match) return res.status(400).json({ message: "Incorrect password" });
 
 		const token = sign(
 			{
