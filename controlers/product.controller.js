@@ -16,7 +16,7 @@ export const create = async (req, res, next) => {
 			image,
 			createdBy:ownerId
 		});
-		res.status(20).json({ message: "created successfully" });
+		res.status(201).json({ message: "created successfully" });
 	} catch (err) {
 		next(err);
 	}
