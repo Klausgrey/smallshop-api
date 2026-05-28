@@ -11,7 +11,6 @@ export const verifyToken = async (req, res, next) => {
 	try {
 		const decoded = verify(token, process.env.JWT_SECRET);
 		req.user = decoded;
-		console.log(decoded);
 		next();
 	} catch (err) {
 		next(err);
