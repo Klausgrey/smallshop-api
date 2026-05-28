@@ -52,9 +52,9 @@ export const getAll = async (req, res, next) => {
 	}
 };
 export const getById = async (req, res, next) => {
-	productId = req.params.id;
+	const productId = req.params.id;
 	try {
-		match = await findById(productId);
+		const match = await Product.findById(productId);
 		if (!match) return res.status(404).json({ message: "id not found" });
 		res.status(200).json({
 			match,
@@ -65,23 +65,28 @@ export const getById = async (req, res, next) => {
 };
 
 export const UpdateById = async (req, res, next) => {
-	productId = req.params.id
+	const productId = req.params.id;
 	try {
-		match = await findById(productId)
+		const match = await Product.findById(productId);
 		if (!match) return res.status(404).json({ message: "id not found" });
 
-		result = await Product.findByIdAndUpdate({_id: productId, })
+		const result = await Product.findByIdAndUpdate(
+			productId,
+			{ $set: req.body },
+			{ new: true },
+		);
+		res.status(200).json({ result });
 	} catch (err) {
-		next(err)
+		next(err);
 	}
-}
+};
 export const deleteById = async (req, res, next) => {
-	productId = req.params.id;
+	const productId = req.params.id;
 	try {
-		match = await Product.findById(productId);
+		const match = await Product.findById(productId);
 		if (!match) return res.status(404).json({ message: "id not found" });
 
-		result = await Product.findByIdAndDelete(productId);
+		const result = await Product.findByIdAndDelete(productId);
 		res.status(200).json({ message: "item deleted successfully" });
 	} catch (err) {
 		next(err);
