@@ -1,12 +1,18 @@
 import Product from "../models/product.model.js";
+import { uploadToCloudinary } from "../config/cloudinary.js";
 
 export const create = async (req, res, next) => {
-	const { name, price, description, category, stock, isAvailable, image } =
-		req.body;
-	const ownerId = req.user.id
+	const { name, price, description, category, stock, isAvailable } = req.body;
+	const ownerId = req.user.id;
 
 	try {
-		await Product.create({
+		const uploadResult = await uploadToCloudinary(req.file.buffer);
+		const image = {
+			url: uploadResult.secure_url,
+			publicId: uploadResult.public_id,
+		};
+
+		const product = await Product.create({
 			name,
 			price,
 			description,
@@ -14,9 +20,9 @@ export const create = async (req, res, next) => {
 			stock,
 			isAvailable,
 			image,
-			createdBy:ownerId
+			createdBy: ownerId,
 		});
-		res.status(201).json({ message: "created successfully" });
+		res.status(201).json({ product });
 	} catch (err) {
 		next(err);
 	}

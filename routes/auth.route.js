@@ -1,5 +1,4 @@
 import { register, login } from "../controlers/auth.controller.js";
-import { verifyToken } from "../middleware/auth.middleware.js";
 import { validate } from "../middleware/validate.middleware.js";
 import { registerSchema, loginSchema } from "../validation/schema.js";
 import express from "express";
