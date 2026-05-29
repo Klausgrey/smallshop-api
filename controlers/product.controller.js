@@ -51,6 +51,7 @@ export const getAll = async (req, res, next) => {
 		next(err);
 	}
 };
+
 export const getById = async (req, res, next) => {
 	const productId = req.params.id;
 	try {
@@ -80,6 +81,7 @@ export const UpdateById = async (req, res, next) => {
 		next(err);
 	}
 };
+
 export const deleteById = async (req, res, next) => {
 	const productId = req.params.id;
 	try {
