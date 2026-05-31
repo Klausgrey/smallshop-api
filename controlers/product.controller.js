@@ -39,6 +39,7 @@ export const getAll = async (req, res, next) => {
 		const filter = {};
 		if (req.query.category) filter.category = req.query.category;
 		if (req.query.isAvailable)
+			// fix the not available issue, how can i can start and auto update when stock runs out?
 			filter.isAvailable = req.query.isAvailable === "true";
 
 		const result = await Product.find(filter)
