@@ -26,3 +26,16 @@ export const createOrder = async (req, res, next) => {
 		next(err);
 	}
 };
+
+export const getOrders = async (req, res, next) => {
+	const userId = req.user.id;
+
+	try {
+		const match = await Order.findById(userId);
+		if (!match) return res.status(404).json({ message: "Wrong id" });
+
+		res.status(200).json(match);
+	} catch (err) {
+		next(err);
+	}
+};
