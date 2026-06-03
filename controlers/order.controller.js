@@ -29,12 +29,10 @@ export const createOrder = async (req, res, next) => {
 
 export const getOrders = async (req, res, next) => {
 	const userId = req.user.id;
-
+	const filter = req.user.role === "owner" ? {} : { userId };
 	try {
-		const match = await Order.findById(userId);
-		if (!match) return res.status(404).json({ message: "Wrong id" });
-
-		res.status(200).json(match);
+		const orders = await Order.find(filter);
+		res.status(200).json({ orders });
 	} catch (err) {
 		next(err);
 	}
