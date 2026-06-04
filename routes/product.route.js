@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 router.post("/products", verifyToken, isOwner, upload.single("image"), create);
-router.get("/products", verifyToken, isOwner, getAll);
+router.get("/products", getAll);
 router.get("/products/:id", verifyToken, getById);
 router.put("/products/:id", verifyToken, isOwner, UpdateById);
 router.delete("/products/:id", verifyToken, isOwner, deleteById);

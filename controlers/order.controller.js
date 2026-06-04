@@ -1,5 +1,6 @@
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
+import { sendEmail } from "../config/email.js";
 
 export const createOrder = async (req, res, next) => {
 	const productId = req.params.id;
@@ -20,6 +21,15 @@ export const createOrder = async (req, res, next) => {
 			quantity,
 			totalPrice: productPrice * quantity,
 		});
+		try {
+			await sendEmail({
+				to: req.user.email,
+				subject: "Order Confirmed - SmallShop",
+				text: `Hi ${req.user.username}, your order has been recieved. Total amount is ${userOrder.totalPrice}. Status ${userOrder.status}`,
+			});
+		} catch (emailErr) {
+			console.log("Email failure", emailErr.message);
+		}
 		await Product.findByIdAndUpdate(productId, { $inc: { stock: -quantity } });
 		res.status(201).json(userOrder);
 	} catch (err) {
