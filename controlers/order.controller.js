@@ -21,6 +21,7 @@ export const createOrder = async (req, res, next) => {
 			quantity,
 			totalPrice: productPrice * quantity,
 		});
+		console.log("Sending email to", req.user.email);
 		try {
 			await sendEmail({
 				to: req.user.email,

@@ -41,7 +41,7 @@ export const login = async (req, res, next) => {
 			process.env.JWT_SECRET,
 			{ expiresIn: "7d" },
 		);
-		res.status(200).json({ token });
+		res.status(200).json({ token, role: user.role });
 	} catch (err) {
 		next(err);
 	}
