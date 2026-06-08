@@ -1,6 +1,7 @@
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
 import { sendEmail } from "../config/email.js";
+import axios from "axios";
 
 export const createOrder = async (req, res, next) => {
 	const productId = req.params.id;
@@ -21,7 +22,14 @@ export const createOrder = async (req, res, next) => {
 			quantity,
 			totalPrice: productPrice * quantity,
 		});
-		console.log("Sending email to", req.user.email);
+		const response = await axios.post(
+			"https://api.paystack.co/transaction/initialize",
+			{ email: req.user.email, amount: productPrice * 100 },
+			{ headers: { Authorization: `Bearer ${PAYSTACK_SECRET}` } },
+		);
+		const { authorization_url, reference } = response.data.data;
+		res.status(201).json({userOrder, authorization_url})
+		await Order.findOneAndUpdate({ userId, productId }, { reference });
 		try {
 			await sendEmail({
 				to: req.user.email,
