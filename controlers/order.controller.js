@@ -24,11 +24,10 @@ export const createOrder = async (req, res, next) => {
 		});
 		const response = await axios.post(
 			"https://api.paystack.co/transaction/initialize",
-			{ email: req.user.email, amount: productPrice * 100 },
+			{ email: req.user.email, amount: productPrice * quantity * 100 },
 			{ headers: { Authorization: `Bearer ${PAYSTACK_SECRET}` } },
 		);
 		const { authorization_url, reference } = response.data.data;
-		res.status(201).json({userOrder, authorization_url})
 		await Order.findOneAndUpdate({ userId, productId }, { reference });
 		try {
 			await sendEmail({
@@ -40,7 +39,7 @@ export const createOrder = async (req, res, next) => {
 			console.log("Email failure", emailErr.message);
 		}
 		await Product.findByIdAndUpdate(productId, { $inc: { stock: -quantity } });
-		res.status(201).json(userOrder);
+		res.status(201).json({ userOrder, authorization_url });
 	} catch (err) {
 		next(err);
 	}
