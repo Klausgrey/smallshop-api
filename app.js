@@ -5,6 +5,7 @@ import orderRoute from "./routes/order.route.js";
 import errorHandler from "./middleware/error.middleware.js";
 import connectDB from "./config/db.js";
 import cors from "cors";
+app.use(cors());
 
 const app = express();
 
@@ -13,7 +14,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRoute);
 app.use("/api", productRoute);
 app.use("/api", orderRoute);
-app.use(cors());
 app.use(errorHandler);
 connectDB();
 
